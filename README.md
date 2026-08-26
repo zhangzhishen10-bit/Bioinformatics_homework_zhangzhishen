@@ -1,1 +1,1 @@
-# Bioinformatics_homework_zhangzhishen_SUAT24000210
+# Bioinformatics_homework_zhangzhishen
