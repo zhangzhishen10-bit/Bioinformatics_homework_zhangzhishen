@@ -1,0 +1,61 @@
+=== Q4 variant prioritization log ===
+run at        : 2026-09-20 19:59:05
+R version     : R version 4.6.1 (2026-06-24 ucrt)
+input         : ../data/variants_q4.tsv
+WARNING       : teaching synthetics - NOT clinical data, NOT a diagnosis.
+
+variants loaded: 12
+columns        : CHROM, POS, REF, ALT, FILTER, DP, GQ, AF, GENE, CONSEQUENCE, CLINVAR_SIG, CLINVAR_ID, NOTE
+
+--- Filter cascade (each row shows variants remaining) ---
+                  step before after dropped
+        FILTER == PASS     12    10       2
+              DP >= 20     10     9       1
+              GQ >= 30      9     9       0
+            AF <= 0.01      9     6       3
+ impactful CONSEQUENCE      6     4       2
+
+variants surviving all hard filters: 4
+
+--- Ranked shortlist (transparent additive score) ---
+  GENE CHROM      POS             CONSEQUENCE
+  TP53 chr17  7673803 splice_acceptor_variant
+  KRAS chr12 25398284        missense_variant
+ BRCA2 chr13 32316461        missense_variant
+  LDLR chr19 11200200        missense_variant
+                                  CLINVAR_SIG      AF DP GQ total_score
+                                   Pathogenic 0.00001 80 99          15
+ Conflicting_interpretations_of_pathogenicity 0.00015 58 91           9
+                       Uncertain_significance 0.00010 60 90           8
+                                Likely_benign 0.00020 40 88           6
+
+--- Variants excluded by hard filters (8) ---
+  F5      missense_variant AF=0.42>0.01                 -> Common population allele; ClinVar Benign
+  CFTR    synonymous_variant consequence=synonymous_variant -> Synonymous substitution; ClinVar Benign
+  MSH2    stop_gained FILTER=LowQual; DP=8<20; GQ=12<30 -> Site marked LowQual; DP=8, GQ=12
+  HLA-A   missense_variant FILTER=FAIL                  -> FILTER=FAIL; MHC-region mapping caution
+  .       intergenic_variant consequence=intergenic_variant -> Intergenic; no gene symbol assigned
+  ATM     missense_variant AF=0.18>0.01                 -> AF=0.18; ClinVar Benign
+  MECP2   frameshift_variant DP=5<20; GQ=20<30            -> ChrX site with DP=5, GQ=20
+  .       intron_variant AF=0.35>0.01; consequence=intron_variant -> Intronic; AF=0.35; no ClinVar entry
+
+--- TOP PICKS ---
+1. TP53 chr17:7673803 G>A  [splice_acceptor_variant | Pathogenic | AF=1e-05 | DP=80 | GQ=99] score=15
+2. KRAS chr12:25398284 C>A  [missense_variant | Conflicting_interpretations_of_pathogenicity | AF=0.00015 | DP=58 | GQ=91] score=9
+
+--- Sensitivity check: tighten AF to 1e-4 and DP to 30 ---
+variants surviving strict filters: 2
+  GENE             CONSEQUENCE            CLINVAR_SIG    AF
+  TP53 splice_acceptor_variant             Pathogenic 1e-05
+ BRCA2        missense_variant Uncertain_significance 1e-04
+
+--- outputs written to q4_out ---
+  q4_excluded.tsv
+  q4_filter_cascade.tsv
+  q4_ranked_shortlist.tsv
+  q4_run_log.txt
+  sessionInfo.txt
+  variants_raw_copy.tsv
+
+REMINDER: synthetic teaching data. Result is a prioritization exercise,
+not a clinical interpretation.

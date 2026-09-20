@@ -1,0 +1,6 @@
+step	before	after	dropped
+FILTER == PASS	12	10	2
+DP >= 20	10	9	1
+GQ >= 30	9	9	0
+AF <= 0.01	9	6	3
+impactful CONSEQUENCE	6	4	2
